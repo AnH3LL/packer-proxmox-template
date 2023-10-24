@@ -1,0 +1,45 @@
+version: '3'
+
+tasks:
+  help:
+    cmds:
+      - glow README.md
+    silent: true
+
+  cleanup:
+    cmds:
+      - rm -f packer/ansible/output/ssh_keys/*
+      - rm -f packer/ansible/output/cloud-init/*
+
+  init:
+    cmds:
+      - packer init packer/
+
+  validate:
+    requires:
+      vars: [OS_DIST, OS_VERSION, PROXMOX_API_USER, PROXMOX_API_PASSWORD]
+    cmds:
+      - |
+        packer validate \
+        -var-file packer/vars/common.pkrvars.hcl \
+        -var-file packer/vars/{{.OS_DIST}}{{.OS_VERSION}}.pkrvars.hcl \
+        -var 'proxmox_api_user={{.PROXMOX_API_USER}}' \
+        -var 'proxmox_api_password={{.PROXMOX_API_PASSWORD}}' \
+        -only pre-provisioning.null.ansible-pre-provisioning \
+        -only {{.OS_DIST}}{{.OS_VERSION}}.proxmox-iso.template \
+        packer/
+
+  template:
+    requires:
+      vars: [OS_DIST, OS_VERSION, PROXMOX_API_USER, PROXMOX_API_PASSWORD]
+    cmds:
+      - |
+        packer build \
+        -var-file packer/vars/common.pkrvars.hcl \
+        -var-file packer/vars/{{.OS_DIST}}{{.OS_VERSION}}.pkrvars.hcl \
+        -var 'proxmox_api_user={{.PROXMOX_API_USER}}' \
+        -var 'proxmox_api_password={{.PROXMOX_API_PASSWORD}}' \
+        -only pre-provisioning.null.ansible-pre-provisioning \
+        -only {{.OS_DIST}}{{.OS_VERSION}}.proxmox-iso.template \
+        packer/
+      - defer: { task: cleanup }

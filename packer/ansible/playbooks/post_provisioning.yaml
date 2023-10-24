@@ -1,0 +1,8 @@
+---
+- name: Run pre provisioning tasks
+  hosts: default
+  gather_facts: yes
+
+  tasks:
+    - include_tasks: tasks/baseline.yaml
+    - include_tasks: tasks/copy_default_cloud-init_files.yaml
