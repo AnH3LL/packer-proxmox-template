@@ -2,7 +2,7 @@
 - name: Generate SSH Key pair for template in "{{ ssh_folder }}"
   community.crypto.openssh_keypair:
     path: "{{ ssh_folder }}/{{ ssh_key_name }}"
-    type: ecdsa # ed25519
+    type: ed25519 # ecdsa
     comment: initial_template_key_generated_by_packer
 
 - name: Slurp contents of public key

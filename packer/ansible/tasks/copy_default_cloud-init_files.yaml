@@ -10,6 +10,6 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   loop:
-    - src: "{{playbook_dir}}/../output/cloud-init/cloud.cfg"
+    - src: "{{ playbook_dir }}/../output/cloud-init/cloud.cfg"
       dest: "/etc/cloud/cloud.cfg"
   when: os_dist == "debian"

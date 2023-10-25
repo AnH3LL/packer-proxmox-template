@@ -1,8 +1,8 @@
 ---
 - name: Generate cloud-init files for Debian
   ansible.builtin.template:
-    src: "{{playbook_dir}}/../templates/{{ os_dist }}/{{ os_version }}/{{ item }}.j2"
-    dest: "{{playbook_dir}}/../output/cloud-init/{{ item }}.cfg"
+    src: "{{ playbook_dir }}/../templates/{{ os_dist }}/{{ os_version }}/{{ item }}.j2"
+    dest: "{{ playbook_dir }}/../output/cloud-init/{{ os_dist }}/{{ os_version }}/{{ item }}.cfg"
   with_items:
     - "cloud"
     - "preseed"
@@ -10,8 +10,8 @@
 
 - name: Generate cloud-init files for Ubuntu
   ansible.builtin.template:
-    src: "{{playbook_dir}}/../templates/{{ os_dist }}/{{ os_version }}/{{ item }}.j2"
-    dest: "{{playbook_dir}}/../output/cloud-init/{{ item }}"
+    src: "{{ playbook_dir }}/../templates/{{ os_dist }}/{{ os_version }}/{{ item }}.j2"
+    dest: "{{ playbook_dir }}/../output/cloud-init/{{ os_dist }}/{{ os_version }}/{{ item }}"
   with_items:
     - "user-data"
     - "meta-data"

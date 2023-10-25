@@ -13,7 +13,7 @@
 - name: Install Docker Engine, Docker CLI, Containerd, & Docker Compose
   apt:
     update_cache: yes
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
     install_recommends: yes
   loop:

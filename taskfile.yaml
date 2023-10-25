@@ -8,12 +8,17 @@ tasks:
 
   cleanup:
     cmds:
-      - rm -f packer/ansible/output/ssh_keys/*
-      - rm -f packer/ansible/output/cloud-init/*
+      - find packer/ansible/output/ssh_keys/ -type f -name 'ssh_key_*' -exec rm -rfv {} +
+      - find packer/ansible/output/cloud-init/ -type f -name '*.cfg' ! -name '99-pve.cfg' -exec rm -rfv {} +
+      - find packer/ansible/output/cloud-init/ -type f -name '*-data' -exec rm -rfv {} +
 
   init:
     cmds:
       - packer init packer/
+
+  format:
+    cmds:
+      - packer fmt -recursive .
 
   validate:
     requires:

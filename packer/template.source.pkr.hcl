@@ -40,13 +40,13 @@ source "proxmox-iso" "template" {
     storage_pool = var.disk_storage_pool
   }
 
-  iso_file         = var.iso_file
-  // iso_url          = var.iso_url
+  // iso_file         = var.iso_file
+  iso_url          = var.iso_url
   iso_checksum     = var.iso_checksum
   iso_storage_pool = var.iso_storage_pool
   unmount_iso      = var.iso_unmount_iso
 
-  http_directory = var.cloud_init_http_directory
+  http_directory = "${var.cloud_init_http_directory}/${var.vm_os_dist}/${var.vm_os_version}"
   http_port_min  = var.cloud_init_http_port_min
   http_port_max  = var.cloud_init_http_port_max
   boot_wait      = var.cloud_init_boot_wait
