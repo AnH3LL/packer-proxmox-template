@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "╔══════════════════════════════════════════════════════════════════════════════╗"
-echo "║                         .: CLEANING UP PACKAGES :.                           ║"
+echo "║                         .: CLEANING UP TEMPLATE :.                           ║"
 echo "╚══════════════════════════════════════════════════════════════════════════════╝"
 sudo rm /etc/ssh/ssh_host_*
 sudo truncate -s 0 /etc/machine-id
@@ -22,6 +22,8 @@ unattended-upgrades \
 gnupg-agent \
 linux-headers-amd64 \
 linux-image-amd64 \
+cloud-init \
+cloud-guest-utils \
 curl \
 htop \
 ncdu \

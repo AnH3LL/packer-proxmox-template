@@ -7,13 +7,13 @@ build {
     playbook_file = "./packer/ansible/playbooks/pre_provisioning.yaml"
     extra_arguments = [
       "--extra-vars",
-      "os_dist='${var.vm_os_dist}' os_version='${var.vm_os_version}' user='${var.ssh_username}' password='${var.ssh_password}' ssh_folder='../output/ssh_keys' ssh_key_name='ssh_key_${var.vm_os_dist}${var.vm_os_version}_${var.ssh_username}'"
+      "os_dist='${local.template_config.vm.os_dist}' os_version='${local.template_config.vm.os_version}' user='${local.common_config.ssh.username}' password='${local.common_config.ssh.password}' ssh_folder='../output/ssh_keys' ssh_key_name='ssh_key_${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_${local.common_config.ssh.username}'"
     ]
   }
 }
 
 build {
-  name = "${var.vm_os_dist}${var.vm_os_version}"
+  name = "${local.template_config.vm.os_dist}${local.template_config.vm.os_version}"
 
   sources = ["source.proxmox-iso.template"]
 
@@ -23,20 +23,20 @@ build {
   //   user                    = "packer"
   //   extra_arguments = [
   //     "--extra-vars",
-  //     "ansible_ssh_private_key_file='./packer/ansible/output/ssh_keys/ssh_key_${var.vm_os_dist}${var.vm_os_version}_packer'"
+  //     "ansible_ssh_private_key_file='./packer/ansible/output/ssh_keys/ssh_key_${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_${local.common_config.ssh.username}'"
   //   ]
   //   ansible_env_vars = [ "ANSIBLE_HOST_KEY_CHECKING=False" ]
   // }
 
   provisioner "file" {
-    source      = "./packer/scripts/${var.vm_os_dist}${var.vm_os_version}_bootstrap.sh"
-    destination = "/tmp/${var.vm_os_dist}${var.vm_os_version}_bootstrap.sh"
+    source      = "./packer/scripts/${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_bootstrap.sh"
+    destination = "/tmp/${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_bootstrap.sh"
   }
 
   provisioner "shell" {
     inline = [
-      "sudo chmod +x '/tmp/${var.vm_os_dist}${var.vm_os_version}_bootstrap.sh'",
-      "sudo bash '/tmp/${var.vm_os_dist}${var.vm_os_version}_bootstrap.sh'"
+      "sudo chmod +x '/tmp/${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_bootstrap.sh'",
+      "sudo bash '/tmp/${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_bootstrap.sh'"
     ]
   }
 

@@ -26,12 +26,10 @@ tasks:
     cmds:
       - |
         packer validate \
-        -var-file packer/vars/common.pkrvars.hcl \
-        -var-file packer/vars/{{.OS_DIST}}{{.OS_VERSION}}.pkrvars.hcl \
         -var 'proxmox_api_user={{.PROXMOX_API_USER}}' \
         -var 'proxmox_api_password={{.PROXMOX_API_PASSWORD}}' \
-        -only pre-provisioning.null.ansible-pre-provisioning \
-        -only {{.OS_DIST}}{{.OS_VERSION}}.proxmox-iso.template \
+        -var 'os_dist={{.OS_DIST}}' \
+        -var 'os_version={{.OS_VERSION}}' \
         packer/
 
   template:
@@ -40,11 +38,9 @@ tasks:
     cmds:
       - |
         packer build \
-        -var-file packer/vars/common.pkrvars.hcl \
-        -var-file packer/vars/{{.OS_DIST}}{{.OS_VERSION}}.pkrvars.hcl \
         -var 'proxmox_api_user={{.PROXMOX_API_USER}}' \
         -var 'proxmox_api_password={{.PROXMOX_API_PASSWORD}}' \
-        -only pre-provisioning.null.ansible-pre-provisioning \
-        -only {{.OS_DIST}}{{.OS_VERSION}}.proxmox-iso.template \
+        -var 'os_dist={{.OS_DIST}}' \
+        -var 'os_version={{.OS_VERSION}}' \
         packer/
       - defer: { task: cleanup }

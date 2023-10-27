@@ -4,7 +4,7 @@
     src: "{{ playbook_dir }}/../templates/{{ os_dist }}/{{ os_version }}/{{ item }}.j2"
     dest: "{{ playbook_dir }}/../output/cloud-init/{{ os_dist }}/{{ os_version }}/{{ item }}.cfg"
   with_items:
-    - "cloud"
+    # - "cloud"
     - "preseed"
   when: os_dist == "debian"
 

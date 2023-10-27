@@ -370,7 +370,7 @@ tasksel tasksel/first multiselect standard, ssh-server
 #d-i pkgsel/run_tasksel boolean false
 
 # Individual additional packages to install
-d-i pkgsel/include string sudo qemu-guest-agent openssh-server cloud-init
+d-i pkgsel/include string sudo qemu-guest-agent openssh-server
 # Whether to upgrade packages after debootstrap.
 # Allowed values: none, safe-upgrade, full-upgrade
 d-i pkgsel/upgrade select full-upgrade

@@ -5,54 +5,54 @@ source "null" "ansible-pre-provisioning" {
 
 ## Define Proxmox VM template
 source "proxmox-iso" "template" {
-  proxmox_url              = var.proxmox_url
+  proxmox_url              = local.common_config.proxmox.url
   username                 = var.proxmox_api_user
   password                 = var.proxmox_api_password
-  insecure_skip_tls_verify = var.proxmox_insecure_skip_tls_verify
-  node                     = var.proxmox_node
+  insecure_skip_tls_verify = local.common_config.proxmox.insecure_skip_tls_verify
+  node                     = local.common_config.proxmox.node
 
-  vm_id                   = var.vm_id
-  vm_name                 = var.vm_name
-  template_description    = "${var.vm_template_description} -- Created: ${formatdate("YYYY-MM-DD hh:mm:ss ZZZ", timestamp())}"
-  os                      = var.vm_os_type
-  machine                 = var.vm_machine_type
-  cpu_type                = var.vm_cpu_type
-  sockets                 = var.vm_sockets
-  cores                   = var.vm_cores
-  memory                  = var.vm_memory
-  bios                    = var.vm_bios
-  scsi_controller         = var.vm_scsi_controller
-  qemu_agent              = var.vm_qemu_agent
-  cloud_init              = var.vm_cloud_init
-  cloud_init_storage_pool = var.disk_storage_pool
+  vm_id                   = local.template_config.vm.id
+  vm_name                 = local.template_config.vm.name
+  template_description    = "${local.template_config.vm.template_description} -- Created: ${formatdate("YYYY-MM-DD hh:mm:ss ZZZ", timestamp())}"
+  cpu_type                = local.template_config.vm.cpu_type
+  sockets                 = local.template_config.vm.sockets
+  cores                   = local.template_config.vm.cores
+  memory                  = local.template_config.vm.memory
+  os                      = local.common_config.vm.os_type
+  machine                 = local.common_config.vm.machine_type
+  bios                    = local.common_config.vm.bios
+  scsi_controller         = local.common_config.vm.scsi_controller
+  qemu_agent              = local.common_config.vm.qemu_agent
+  cloud_init              = local.common_config.vm.cloud_init
+  cloud_init_storage_pool = local.common_config.disk.storage_pool
 
   network_adapters {
-    model    = var.network_model
-    bridge   = var.network_bridge
-    vlan_tag = var.network_vlan_tag
-    firewall = var.network_firewall
+    model    = local.common_config.network.model
+    bridge   = local.common_config.network.bridge
+    vlan_tag = local.common_config.network.vlan_tag
+    firewall = local.common_config.network.firewall
   }
 
   disks {
-    type         = var.disk_type
-    format       = var.disk_format
-    disk_size    = var.disk_size
-    storage_pool = var.disk_storage_pool
+    type         = local.common_config.disk.type
+    format       = local.common_config.disk.format
+    disk_size    = local.common_config.disk.size
+    storage_pool = local.common_config.disk.storage_pool
   }
 
-  // iso_file         = var.iso_file
-  iso_url          = var.iso_url
-  iso_checksum     = var.iso_checksum
-  iso_storage_pool = var.iso_storage_pool
-  unmount_iso      = var.iso_unmount_iso
+  // iso_file         = local.template_config.iso.file
+  iso_url          = local.template_config.iso.url
+  iso_checksum     = local.template_config.iso.checksum
+  iso_storage_pool = local.template_config.iso.storage_pool
+  unmount_iso      = local.template_config.iso.unmount_iso
 
-  http_directory = "${var.cloud_init_http_directory}/${var.vm_os_dist}/${var.vm_os_version}"
-  http_port_min  = var.cloud_init_http_port_min
-  http_port_max  = var.cloud_init_http_port_max
-  boot_wait      = var.cloud_init_boot_wait
-  boot_command   = var.cloud_init_boot_command
+  http_directory = "${local.common_config.cloud_init.http_directory}/${local.template_config.vm.os_dist}/${local.template_config.vm.os_version}"
+  http_port_min  = local.common_config.cloud_init.http_port_min
+  http_port_max  = local.common_config.cloud_init.http_port_max
+  boot_wait      = local.template_config.cloud_init.boot_wait
+  boot_command   = local.template_config.cloud_init.boot_command
 
-  ssh_username = var.ssh_username
-  ssh_password = var.ssh_password
-  ssh_timeout  = var.ssh_timeout
+  ssh_username = local.common_config.ssh.username
+  ssh_password = local.common_config.ssh.password
+  ssh_timeout  = local.common_config.ssh.timeout
 }
