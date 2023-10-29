@@ -296,6 +296,9 @@ d-i partman/confirm_nooverwrite boolean true
 # included in the 'debian-installer' package or available from D-I source
 # repository.
 
+# Swap
+d-i partman-basicfilesystems/no_swap boolean true
+
 # This makes partman automatically partition without confirmation.
 d-i partman-md/confirm boolean true
 d-i partman-partitioning/confirm_write_new_label boolean true
