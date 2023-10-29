@@ -15,15 +15,6 @@ echo "║                       .: INSTALLING NEW PACKAGES :.                   
 echo "╚══════════════════════════════════════════════════════════════════════════════╝"
 echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
 sudo apt-get -y install \
-apt-transport-https \
-ca-certificates \
-software-properties-common \
-unattended-upgrades \
-gnupg-agent \
-cloud-init \
-cloud-guest-utils \
-curl \
-htop \
-ncdu \
-tmux \
-wget
+{% for item in packages %}
+{{ item }} \
+{% endfor %}

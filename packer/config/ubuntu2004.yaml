@@ -22,3 +22,16 @@ cloud_init:
     "autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
     "--- <enter>"
   ]
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - software-properties-common
+  - unattended-upgrades
+  - gnupg-agent
+  - cloud-init
+  - cloud-guest-utils
+  - curl
+  - htop
+  - ncdu
+  - tmux
+  - wget

@@ -6,8 +6,12 @@ build {
   provisioner "ansible" {
     playbook_file = "./packer/ansible/playbooks/pre_provisioning.yaml"
     extra_arguments = [
-      "--extra-vars",
-      "os_dist='${local.template_config.vm.os_dist}' os_version='${local.template_config.vm.os_version}' user='${local.common_config.ssh.username}' password='${local.common_config.ssh.password}' ssh_folder='../output/ssh_keys' ssh_key_name='ssh_key_${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_${local.common_config.ssh.username}'"
+      "--extra-vars", "os_dist='${local.template_config.vm.os_dist}'",
+      "--extra-vars", "os_version='${local.template_config.vm.os_version}'",
+      "--extra-vars", "user='${local.common_config.ssh.username}'",
+      "--extra-vars", "password='${local.common_config.ssh.password}'",
+      "--extra-vars", "ssh_folder='../output/ssh_keys'",
+      "--extra-vars", "ssh_key_name='ssh_key_${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_${local.common_config.ssh.username}'"
     ]
   }
 }
@@ -29,7 +33,7 @@ build {
   // }
 
   provisioner "file" {
-    source      = "./packer/scripts/${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_bootstrap.sh"
+    source      = "./packer/ansible/output/scripts/${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_bootstrap.sh"
     destination = "/tmp/${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_bootstrap.sh"
   }
 

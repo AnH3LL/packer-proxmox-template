@@ -1,7 +1,10 @@
 ---
 - name: Run pre provisioning tasks
   hosts: localhost
+  vars_files:
+    - ../../config/{{ os_dist }}{{ os_version }}.yaml
 
   tasks:
     - include_tasks: ../tasks/generate_user_keys_and_pass.yaml
     - include_tasks: ../tasks/generate_cloud-init_files.yaml
+    - include_tasks: ../tasks/generate_bootstrap_scripts.yaml

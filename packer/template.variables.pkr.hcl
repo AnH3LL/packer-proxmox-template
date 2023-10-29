@@ -9,6 +9,12 @@ variable "proxmox_api_password" {
   default   = ""
 }
 
+variable "proxmox_api_token" {
+  type      = string
+  sensitive = true
+  default   = ""
+}
+
 variable "os_dist" {
   type    = string
   default = ""
