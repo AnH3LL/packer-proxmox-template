@@ -220,6 +220,43 @@ d-i partman-auto/choose_recipe select atomic
 #                      method{ swap } format{ }                \
 #              .
 
+# Swap
+d-i partman-basicfilesystems/no_swap boolean false
+
+d-i partman-auto/expert_recipe string \
+        efi-boot-lvm-root :: \
+              512 512 512 fat32 \
+                      $primary{ } \
+                      method{ efi } \
+                      format{ } \
+              . \
+              1024 1024 1024 ext4 \
+                      $primary{ } \
+                      $bootable{ } \
+                      method{ format } \
+                      format{ } \
+                      use_filesystem{ } \
+                      filesystem{ ext4 } \
+                      mountpoint{ /boot } \
+              . \
+              100 1000 1000000000 $default_filesystem \
+                      $defaultignore{ } \
+                      $primary{ } \
+                      method{ lvm } \
+                      device{ /dev/sda } \
+                      vg_name{ vg-0 } \
+              . \
+              1024 3072 -1 $default_filesystem \
+                      $lvmok{} \
+                      lv_name{ lv-root } \
+                      in_vg{ vg-0 } \
+                      method{ format } \
+                      format{ } \
+                      use_filesystem{ } \
+                      filesystem{ ext4 } \
+                      mountpoint{ / } \
+              . \
+
 # The full recipe format is documented in the file partman-auto-recipe.txt
 # included in the 'debian-installer' package or available from D-I source
 # repository. This also documents how to specify settings such as file
@@ -239,13 +276,6 @@ d-i partman-auto/choose_recipe select atomic
 # The fragment above is for the amd64 architecture; the details may be
 # different on other architectures. The 'partman-auto' package in the
 # D-I source repository may have an example you can follow.
-
-# This makes partman automatically partition without confirmation, provided
-# that you told it what to do using one of the methods above.
-d-i partman-partitioning/confirm_write_new_label boolean true
-d-i partman/choose_partition select finish
-d-i partman/confirm boolean true
-d-i partman/confirm_nooverwrite boolean true
 
 # Force UEFI booting ('BIOS compatibility' will be lost). Default: false.
 #d-i partman-efi/non_efi_system boolean true
@@ -299,21 +329,19 @@ d-i partman/confirm_nooverwrite boolean true
 # included in the 'debian-installer' package or available from D-I source
 # repository.
 
-# Swap
-d-i partman-basicfilesystems/no_swap boolean true
-
-# This makes partman automatically partition without confirmation.
-d-i partman-md/confirm boolean true
-d-i partman-partitioning/confirm_write_new_label boolean true
-d-i partman/choose_partition select finish
-d-i partman/confirm boolean true
-d-i partman/confirm_nooverwrite boolean true
-
 ## Controlling how partitions are mounted
 # The default is to mount by UUID, but you can also choose "traditional" to
 # use traditional device names, or "label" to try filesystem labels before
 # falling back to UUIDs.
 #d-i partman/mount_style select uuid
+
+# This makes partman automatically partition without confirmation, provided
+# that you told it what to do using one of the methods above.
+d-i partman-md/confirm boolean true
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
 
 ### Base system installation
 # Configure APT to not install recommended packages by default. Use of this
