@@ -23,24 +23,37 @@ tasks:
 
   validate:
     requires:
-      vars: [OS_DIST, OS_VERSION, PROXMOX_API_USER, PROXMOX_API_PASSWORD]
+      vars: [OS_DIST, OS_VERSION, PROXMOX_API_TOKEN_ID, PROXMOX_API_TOKEN_SECRET]
     cmds:
       - |
         packer validate \
-        -var 'proxmox_api_user={{.PROXMOX_API_USER}}' \
-        -var 'proxmox_api_password={{.PROXMOX_API_PASSWORD}}' \
+        -var 'proxmox_api_token_id={{.PROXMOX_API_TOKEN_ID}}' \
+        -var 'proxmox_api_token_secret={{.PROXMOX_API_TOKEN_SECRET}}' \
         -var 'os_dist={{.OS_DIST}}' \
         -var 'os_version={{.OS_VERSION}}' \
         packer/
 
-  template:
+  pre-provisioning:
     requires:
-      vars: [OS_DIST, OS_VERSION, PROXMOX_API_USER, PROXMOX_API_PASSWORD]
+      vars: [OS_DIST, OS_VERSION, PROXMOX_API_TOKEN_ID, PROXMOX_API_TOKEN_SECRET]
     cmds:
       - |
         packer build \
-        -var 'proxmox_api_user={{.PROXMOX_API_USER}}' \
-        -var 'proxmox_api_password={{.PROXMOX_API_PASSWORD}}' \
+        -var 'proxmox_api_token_id={{.PROXMOX_API_TOKEN_ID}}' \
+        -var 'proxmox_api_token_secret={{.PROXMOX_API_TOKEN_SECRET}}' \
+        -var 'os_dist={{.OS_DIST}}' \
+        -var 'os_version={{.OS_VERSION}}' \
+        -only 'pre-provisioning'
+        packer/
+
+  template:
+    requires:
+      vars: [OS_DIST, OS_VERSION, PROXMOX_API_TOKEN_ID, PROXMOX_API_TOKEN_SECRET]
+    cmds:
+      - |
+        packer build \
+        -var 'proxmox_api_token_id={{.PROXMOX_API_TOKEN_ID}}' \
+        -var 'proxmox_api_token_secret={{.PROXMOX_API_TOKEN_SECRET}}' \
         -var 'os_dist={{.OS_DIST}}' \
         -var 'os_version={{.OS_VERSION}}' \
         packer/

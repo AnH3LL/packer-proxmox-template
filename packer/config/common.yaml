@@ -4,7 +4,7 @@ proxmox:
   node: "pve-rbx"
 vm:
   qemu_agent: true
-  cloud_init: true
+  cloud_init: false
   os_type: "l26"
   machine_type: "q35"
   bios: "seabios"

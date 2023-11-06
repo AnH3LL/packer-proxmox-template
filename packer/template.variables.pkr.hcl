@@ -1,15 +1,9 @@
-variable "proxmox_api_user" {
+variable "proxmox_api_token_id" {
   type    = string
   default = ""
 }
 
-variable "proxmox_api_password" {
-  type      = string
-  sensitive = true
-  default   = ""
-}
-
-variable "proxmox_api_token" {
+variable "proxmox_api_token_secret" {
   type      = string
   sensitive = true
   default   = ""

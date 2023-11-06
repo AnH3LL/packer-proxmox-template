@@ -27,7 +27,7 @@ Variables from the `debian-11-bullseye.source.pkr.hcl` can be overridden like so
 
 ```sh
 $ packer init
-$ packer build -var "proxmox_host=10.100.150.10:8006" "proxmox_api_user=<<NOTAREALUSER>>" "proxmox_api_password=<<NOTAREALPASSWORD>>" .
+$ packer build -var "proxmox_host=10.100.150.10:8006" "proxmox_api_token_id=<<NOTAREALUSER>>" "proxmox_api_token_secret=<<NOTAREALPASSWORD>>" .
 ```
 
 or you can just as easily specify a file that contains the variables and multiple files as well:

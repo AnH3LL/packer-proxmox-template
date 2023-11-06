@@ -1,6 +1,7 @@
 vm:
   os_dist: "ubuntu"
   os_version: "2204"
+  os_codename: "jammy"
   id: "999002204"
   name: "tmpl-ubuntu2204"
   template_description: "Ubuntu 22.04 Jammy Packer Template"
@@ -12,6 +13,7 @@ iso:
   file: "nfs-backup-rbx:iso/ubuntu-22.04.3-live-server-amd64.iso"
   url: "https://releases.ubuntu.com/jammy/ubuntu-22.04.3-live-server-amd64.iso"
   checksum: "sha512:8e91080603bbae8c92f5102d0c8ddfa05b957965a29e916242c818089734ddc84c24608b9820f895102d06fb5d8b118cc18bf8d60e2a9c20ccd07a8929bba868"
+  download_pve: true
   storage_pool: "nfs-backup-rbx"
   unmount_iso: true
 cloud_init:
@@ -32,6 +34,7 @@ packages:
   - gnupg-agent
   - cloud-init
   - cloud-guest-utils
+  - locales-all
   - curl
   - htop
   - ncdu

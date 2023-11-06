@@ -1,0 +1,32 @@
+#!/bin/bash
+
+echo "╔══════════════════════════════════════════════════════════════════════════════╗"
+echo "║                       .: INSTALLING NEW PACKAGES :.                          ║"
+echo "╚══════════════════════════════════════════════════════════════════════════════╝"
+echo "===>>> Set noninteractive method for installing packages..."
+echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
+echo "===>>> Installing packages..."
+sudo apt-get -y install \
+{% for item in packages %}
+{{ item }} \
+{% endfor %}
+
+echo "╔══════════════════════════════════════════════════════════════════════════════╗"
+echo "║                         .: CLEANING UP TEMPLATE :.                           ║"
+echo "╚══════════════════════════════════════════════════════════════════════════════╝"
+echo "===>>> Remove ssh keys and authorized keys for all users..."
+sudo rm /etc/ssh/ssh_host_*
+sudo find /root/ -type f -name 'authorized_keys' -exec truncate -s 0 {} +
+sudo find /home/ -type f -name 'authorized_keys' -exec truncate -s 0 {} +
+echo "===>>> Remove history command for all users..."
+unset HISTFILE
+sudo rm -rf /home/*/.*history /root/.*history
+echo "===>>> Remove machine-id..."
+sudo truncate -s 0 /etc/machine-id
+echo "===>>> Remove unused dependency packages..."
+sudo apt-get -y autoremove --purge
+echo "===>>> Clean local repository of retrieved package files..."
+sudo apt-get -y autoclean
+sudo apt-get -y clean
+echo "===>>> Ensuring data has been flushed to disk..."
+sudo sync

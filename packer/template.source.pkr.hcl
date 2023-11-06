@@ -1,4 +1,4 @@
-## Dummy source that enables us to run the ansible pre-provisioning.
+## Dummy source that enables us to run the ansible pre-provisioning
 source "null" "ansible-pre-provisioning" {
   communicator = "none"
 }
@@ -6,8 +6,8 @@ source "null" "ansible-pre-provisioning" {
 ## Define Proxmox VM template
 source "proxmox-iso" "template" {
   proxmox_url              = local.common_config.proxmox.url
-  username                 = var.proxmox_api_user
-  password                 = var.proxmox_api_password
+  username                 = var.proxmox_api_token_id
+  token                    = var.proxmox_api_token_secret
   insecure_skip_tls_verify = local.common_config.proxmox.insecure_skip_tls_verify
   node                     = local.common_config.proxmox.node
 
@@ -24,7 +24,6 @@ source "proxmox-iso" "template" {
   scsi_controller         = local.common_config.vm.scsi_controller
   qemu_agent              = local.common_config.vm.qemu_agent
   cloud_init              = local.common_config.vm.cloud_init
-  cloud_init_storage_pool = local.common_config.disk.storage_pool
 
   network_adapters {
     model    = local.common_config.network.model
@@ -43,6 +42,7 @@ source "proxmox-iso" "template" {
   // iso_file         = local.template_config.iso.file
   iso_url          = local.template_config.iso.url
   iso_checksum     = local.template_config.iso.checksum
+  iso_download_pve = local.template_config.iso.download_pve
   iso_storage_pool = local.template_config.iso.storage_pool
   unmount_iso      = local.template_config.iso.unmount_iso
 

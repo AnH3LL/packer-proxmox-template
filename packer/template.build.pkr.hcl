@@ -22,14 +22,13 @@ build {
   sources = ["source.proxmox-iso.template"]
 
   // provisioner "ansible" {
-  //   playbook_file           = "./packer/ansible/playbooks/post_provisioning.yaml"
-  //   use_proxy               = false
-  //   user                    = "packer"
+  //   playbook_file   = "./packer/ansible/playbooks/post_provisioning.yaml"
+  //   use_proxy       = false
+  //   user            = "packer"
   //   extra_arguments = [
-  //     "--extra-vars",
-  //     "ansible_ssh_private_key_file='./packer/ansible/output/ssh_keys/ssh_key_${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_${local.common_config.ssh.username}'"
+  //     "--extra-vars", "ansible_ssh_private_key_file='./packer/ansible/output/ssh_keys/ssh_key_${local.template_config.vm.os_dist}${local.template_config.vm.os_version}_${local.common_config.ssh.username}'"
   //   ]
-  //   ansible_env_vars = [ "ANSIBLE_HOST_KEY_CHECKING=False" ]
+  //   ansible_ssh_extra_args = [ "-o StrictHostKeyChecking=no" ]
   // }
 
   provisioner "file" {
