@@ -1,4 +1,9 @@
 #!/bin/bash
+echo "╔══════════════════════════════════════════════════════════════════════════════╗"
+echo "║                        .: UPGRADING OS PACKAGES :.                           ║"
+echo "╚══════════════════════════════════════════════════════════════════════════════╝"
+echo "===>>> Upgrading OS packages..."
+sudo apt-get -y dist-upgrade
 
 echo "╔══════════════════════════════════════════════════════════════════════════════╗"
 echo "║                       .: INSTALLING NEW PACKAGES :.                          ║"
@@ -7,7 +12,7 @@ echo "===>>> Set noninteractive method for installing packages..."
 echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
 echo "===>>> Installing packages..."
 sudo apt-get -y install \
-{% for item in packages %}
+{% for item in config.template.packages %}
 {{ item }} \
 {% endfor %}
 

@@ -127,8 +127,8 @@ d-i passwd/make-user boolean true
 #d-i passwd/root-password-crypted password [crypt(3) hash]
 
 # To create a normal user account.
-d-i passwd/user-fullname string {{ user }}
-d-i passwd/username string {{ user }}
+d-i passwd/user-fullname string {{ config.common.ssh.username }}
+d-i passwd/username string {{ config.common.ssh.username }}
 # Normal user's password, either in clear text
 #d-i passwd/user-password password insecure
 #d-i passwd/user-password-again password insecure
@@ -173,7 +173,7 @@ d-i clock-setup/ntp boolean true
 # - regular: use the usual partition types for your architecture
 # - lvm:     use LVM to partition the disk
 # - crypto:  use LVM within an encrypted partition
-d-i partman-auto/method string lvm
+d-i partman-auto/method string regular
 
 # You can define the amount of space that will be used for the LVM volume
 # group. It can either be a size with its unit (eg. 20 GB), a percentage of
@@ -194,12 +194,25 @@ d-i partman-lvm/confirm_nooverwrite boolean true
 # - atomic: all files in one partition
 # - home:   separate /home partition
 # - multi:  separate /home, /var, and /tmp partitions
-d-i partman-auto/choose_recipe select atomic
+d-i partman-auto/choose_recipe select boot-root
 
 # Or provide a recipe of your own...
 # If you have a way to get a recipe file into the d-i environment, you can
 # just point at it.
 #d-i partman-auto/expert_recipe_file string /hd-media/recipe
+
+d-i partman-auto/expert_recipe string                         \
+      boot-root ::                                            \
+              500 10000 -1 ext4                               \
+                      $primary{ } $bootable{ }                \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ / }                         \
+              .
+
+# No additional partitions
+d-i partman-basicfilesystems/no_mount_point boolean false
+d-i partman-basicfilesystems/no_swap boolean false
 
 # If not, you can put an entire recipe into the preconfiguration file in one
 # (logical) line. This example creates a small /boot partition, suitable
@@ -221,42 +234,39 @@ d-i partman-auto/choose_recipe select atomic
 #                      method{ swap } format{ }                \
 #              .
 
-# Swap
-d-i partman-basicfilesystems/no_swap boolean false
-
-d-i partman-auto/expert_recipe string \
-        efi-boot-lvm-root :: \
-              512 512 512 fat32 \
-                      $primary{ } \
-                      method{ efi } \
-                      format{ } \
-              . \
-              1024 1024 1024 ext4 \
-                      $primary{ } \
-                      $bootable{ } \
-                      method{ format } \
-                      format{ } \
-                      use_filesystem{ } \
-                      filesystem{ ext4 } \
-                      mountpoint{ /boot } \
-              . \
-              100 1000 1000000000 $default_filesystem \
-                      $defaultignore{ } \
-                      $primary{ } \
-                      method{ lvm } \
-                      device{ /dev/sda } \
-                      vg_name{ vg-0 } \
-              . \
-              1024 3072 -1 $default_filesystem \
-                      $lvmok{} \
-                      lv_name{ lv-root } \
-                      in_vg{ vg-0 } \
-                      method{ format } \
-                      format{ } \
-                      use_filesystem{ } \
-                      filesystem{ ext4 } \
-                      mountpoint{ / } \
-              . \
+# d-i partman-auto/expert_recipe string \
+#         efi-boot-lvm-root :: \
+#               512 512 512 fat32 \
+#                       $primary{ } \
+#                       method{ efi } \
+#                       format{ } \
+#               . \
+#               1024 1024 1024 ext4 \
+#                       $primary{ } \
+#                       $bootable{ } \
+#                       method{ format } \
+#                       format{ } \
+#                       use_filesystem{ } \
+#                       filesystem{ ext4 } \
+#                       mountpoint{ /boot } \
+#               . \
+#               100 1000 1000000000 $default_filesystem \
+#                       $defaultignore{ } \
+#                       $primary{ } \
+#                       method{ lvm } \
+#                       device{ /dev/sda } \
+#                       vg_name{ vg-0 } \
+#               . \
+#               1024 3072 -1 $default_filesystem \
+#                       $lvmok{} \
+#                       lv_name{ lv-root } \
+#                       in_vg{ vg-0 } \
+#                       method{ format } \
+#                       format{ } \
+#                       use_filesystem{ } \
+#                       filesystem{ ext4 } \
+#                       mountpoint{ / } \
+#               .
 
 # The full recipe format is documented in the file partman-auto-recipe.txt
 # included in the 'debian-installer' package or available from D-I source
@@ -509,10 +519,10 @@ d-i finish-install/reboot_in_progress note
 #d-i preseed/late_command string apt-install zsh; in-target chsh -s /bin/zsh
 
 d-i preseed/late_command string \
-  in-target mkdir -p /home/{{ user }}/.ssh; \
-  in-target /bin/sh -c "echo '{{ user_pubkey }}' >> /home/{{ user }}/.ssh/authorized_keys"; \
-  in-target /bin/sh -c "echo '{{ local_pubkey }}' >> /home/{{ user }}/.ssh/authorized_keys"; \
-  in-target chmod -R 700 /home/{{ user }}/.ssh; \
-  in-target chmod -R 600 /home/{{ user }}/.ssh/authorized_keys; \
-  in-target chown -R 1000:1000 /home/{{ user }}/.ssh; \
-  in-target /bin/sh -c "echo '{{ user }} ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/{{ user }}"
+  in-target mkdir -p /home/{{ config.common.ssh.username }}/.ssh; \
+  in-target /bin/sh -c "echo '{{ user_pubkey }}' >> /home/{{ config.common.ssh.username }}/.ssh/authorized_keys"; \
+  in-target /bin/sh -c "echo '{{ local_pubkey }}' >> /home/{{ config.common.ssh.username }}/.ssh/authorized_keys"; \
+  in-target chmod -R 700 /home/{{ config.common.ssh.username }}/.ssh; \
+  in-target chmod -R 600 /home/{{ config.common.ssh.username }}/.ssh/authorized_keys; \
+  in-target chown -R 1000:1000 /home/{{ config.common.ssh.username }}/.ssh; \
+  in-target /bin/sh -c "echo '{{ config.common.ssh.username }} ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/{{ config.common.ssh.username }}"

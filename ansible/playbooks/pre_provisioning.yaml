@@ -1,0 +1,14 @@
+---
+- name: Load configuration vars
+  hosts: localhost
+  connection: local
+  tasks:
+    - ansible.builtin.include_tasks: tasks/load_configuration_vars.yaml
+
+- name: Run pre provisioning tasks
+  hosts: localhost
+  connection: local
+  vars:
+    config: "{{ hostvars.localhost.config }}"
+  roles:
+    - role: pre_provisioning

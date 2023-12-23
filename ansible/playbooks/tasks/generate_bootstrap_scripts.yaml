@@ -1,16 +1,16 @@
 ---
 - name: Generate bootstrap scripts for Debian
-  ansible.builtin.template:
-    src: "{{ playbook_dir }}/../templates/{{ item }}.j2"
-    dest: "{{ playbook_dir }}/../output/scripts/{{ os_dist }}{{ os_version }}_{{ item }}.sh"
-  with_items:
-    - "bootstrap"
   when: os_dist == "debian"
+  ansible.builtin.template:
+    src: "{{ item }}.sh.j2"
+    dest: "{{ playbook_dir }}/../output/scripts/{{ os_dist }}{{ os_version }}_{{ item }}.sh"
+  loop:
+    - "bootstrap"
 
 - name: Generate bootstrap scripts for Ubuntu
-  ansible.builtin.template:
-    src: "{{ playbook_dir }}/../templates/{{ item }}.j2"
-    dest: "{{ playbook_dir }}/../output/scripts/{{ os_dist }}{{ os_version }}_{{ item }}.sh"
-  with_items:
-    - "bootstrap"
   when: os_dist == "ubuntu"
+  ansible.builtin.template:
+    src: "{{ item }}.sh.j2"
+    dest: "{{ playbook_dir }}/../output/scripts/{{ os_dist }}{{ os_version }}_{{ item }}.sh"
+  loop:
+    - "bootstrap"

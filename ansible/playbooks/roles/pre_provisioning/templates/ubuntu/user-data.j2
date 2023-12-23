@@ -22,7 +22,7 @@ autoinstall:
     package_upgrade: true
     timezone: Europe/Madrid
     users:
-      - name: "{{ user }}"
+      - name: "{{ config.common.ssh.username }}"
         passwd: "{{ gen_hashed_password.stdout }}"
         groups: [adm, cdrom, dip, plugdev, lxd, sudo]
         lock_passwd: false

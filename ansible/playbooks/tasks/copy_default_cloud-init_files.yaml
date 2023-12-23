@@ -1,0 +1,16 @@
+---
+- name: Configuring Proxmox cloud-init config
+  ansible.builtin.template:
+    src: "{{ item }}.cfg.j2"
+    dest: "/etc/cloud/cloud.cfg.d/{{ item }}.cfg"
+  loop:
+    - "99_pve"
+
+- name: Copy cloud-init files for Debian
+  when: os_dist == "debian"
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - src: "{{ playbook_dir }}/../output/cloud-init/{{ os_dist }}/{{ os_version }}/cloud.cfg"
+      dest: "/etc/cloud/cloud.cfg"

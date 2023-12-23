@@ -1,0 +1,6 @@
+cloud_init:
+  boot_wait: "5s"
+  boot_command: [ "<esc><wait>auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<enter>" ]
+  http_directory: "../ansible/output/cloud-init"
+  http_port_min: 8100
+  http_port_max: 8100

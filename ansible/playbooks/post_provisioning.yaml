@@ -1,0 +1,11 @@
+---
+- name: Load configuration vars
+  hosts: default
+  tasks:
+    - ansible.builtin.include_tasks: tasks/load_configuration_vars.yaml
+
+- name: Run post provisioning tasks
+  hosts: default
+  become: true
+  roles:
+    - role: post_provisioning

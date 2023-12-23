@@ -1,0 +1,9 @@
+---
+- name: Generate user ssh keys and pass
+  ansible.builtin.include_tasks: tasks/generate_user_keys_and_pass.yaml
+
+- name: Generate cloud-init files
+  ansible.builtin.include_tasks: tasks/generate_cloud-init_files.yaml
+
+- name: Generate bootstrap scripts
+  ansible.builtin.include_tasks: tasks/generate_bootstrap_scripts.yaml

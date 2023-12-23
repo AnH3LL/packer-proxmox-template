@@ -1,0 +1,34 @@
+version: '3'
+
+tasks:
+  format:
+    cmds:
+      - packer fmt -recursive templates/
+
+  validate:
+    requires:
+      vars: [OS_DIST, OS_VERSION, PACKER_API_TOKEN_ID, PACKER_API_TOKEN_SECRET]
+    cmds:
+      - |
+        packer validate \
+        -var 'proxmox_api_token_id={{.PACKER_API_TOKEN_ID}}' \
+        -var 'proxmox_api_token_secret={{.PACKER_API_TOKEN_SECRET}}' \
+        -var 'os_dist={{.OS_DIST}}' \
+        -var 'os_version={{.OS_VERSION}}' \
+        templates/
+
+  init:
+    cmds:
+      - packer init templates/
+
+  build:
+    requires:
+      vars: [OS_DIST, OS_VERSION, PACKER_API_TOKEN_ID, PACKER_API_TOKEN_SECRET]
+    cmds:
+      - |
+        packer build \
+        -var 'proxmox_api_token_id={{.PACKER_API_TOKEN_ID}}' \
+        -var 'proxmox_api_token_secret={{.PACKER_API_TOKEN_SECRET}}' \
+        -var 'os_dist={{.OS_DIST}}' \
+        -var 'os_version={{.OS_VERSION}}' \
+        templates/

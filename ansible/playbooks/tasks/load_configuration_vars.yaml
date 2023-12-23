@@ -1,0 +1,10 @@
+---
+- name: Load configuration vars
+  ansible.builtin.include_vars:
+    dir: ../../../packer/config/
+    files_matching: "(common.yaml)|({{ os_dist }}{{ os_version }}.yaml)"
+    name: config
+
+- name: Set config as fact
+  ansible.builtin.set_fact:
+    config: "{{ config }}"

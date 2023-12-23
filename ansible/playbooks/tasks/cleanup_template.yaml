@@ -1,0 +1,11 @@
+---
+- name: Clean unnecessary configuration
+  ansible.builtin.shell:
+    cmd: |
+      rm /etc/ssh/ssh_host_*
+      find /root/ -type f -name 'authorized_keys' -exec truncate -s 0 {} +
+      find /home/ -type f -name 'authorized_keys' -exec truncate -s 0 {} +
+      unset HISTFILE
+      rm -rf /home/*/.*history /root/.*history
+      truncate -s 0 /etc/machine-id
+      sync

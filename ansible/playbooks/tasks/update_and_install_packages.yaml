@@ -1,0 +1,20 @@
+---
+- name: Upgrade all packages to the latest version
+  when: ansible_distribution in ['Debian','Ubuntu']
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: yes
+    install_recommends: false
+
+- name: Install new packages
+  when: ansible_distribution in ['Debian','Ubuntu']
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ config.template.packages }}"
+
+- name: Install core dependencies, clean apt, & remove old programs
+  when: ansible_distribution in ['Debian','Ubuntu']
+  ansible.builtin.apt:
+    autoremove: yes
+    autoclean: yes

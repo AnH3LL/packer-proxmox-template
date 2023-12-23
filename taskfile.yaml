@@ -1,5 +1,13 @@
 version: '3'
 
+includes:
+  ansible:
+    taskfile: ./ansible/taskfile.yaml
+    dir: ./ansible
+  packer:
+    taskfile: ./packer/taskfile.yaml
+    dir: ./packer
+
 tasks:
   help:
     cmds:
@@ -8,53 +16,17 @@ tasks:
 
   cleanup:
     cmds:
-      - find packer/ansible/output/cloud-init/ -type f -name '*.cfg' ! -name '99-pve.cfg' -exec rm -rfv {} +
-      - find packer/ansible/output/cloud-init/ -type f -name '*-data' -exec rm -rfv {} +
-      - find packer/ansible/output/scripts/ -type f -name '*.sh' -exec truncate -s 0 {} +
-      - find packer/ansible/output/ssh_keys/ -type f -name 'ssh_key_*' -exec rm -rfv {} +
-
-  init:
-    cmds:
-      - packer init packer/
-
-  format:
-    cmds:
-      - packer fmt -recursive .
-
-  validate:
-    requires:
-      vars: [OS_DIST, OS_VERSION, PROXMOX_API_TOKEN_ID, PROXMOX_API_TOKEN_SECRET]
-    cmds:
-      - |
-        packer validate \
-        -var 'proxmox_api_token_id={{.PROXMOX_API_TOKEN_ID}}' \
-        -var 'proxmox_api_token_secret={{.PROXMOX_API_TOKEN_SECRET}}' \
-        -var 'os_dist={{.OS_DIST}}' \
-        -var 'os_version={{.OS_VERSION}}' \
-        packer/
-
-  pre-provisioning:
-    requires:
-      vars: [OS_DIST, OS_VERSION, PROXMOX_API_TOKEN_ID, PROXMOX_API_TOKEN_SECRET]
-    cmds:
-      - |
-        packer build \
-        -var 'proxmox_api_token_id={{.PROXMOX_API_TOKEN_ID}}' \
-        -var 'proxmox_api_token_secret={{.PROXMOX_API_TOKEN_SECRET}}' \
-        -var 'os_dist={{.OS_DIST}}' \
-        -var 'os_version={{.OS_VERSION}}' \
-        -only 'pre-provisioning'
-        packer/
+      - find ansible/output/cloud-init/ -type f -name '*.cfg' ! -name '99-pve.cfg' -exec rm -rfv {} +
+      - find ansible/output/cloud-init/ -type f -name '*-data' -exec rm -rfv {} +
+      - find ansible/output/scripts/ -type f -name '*.sh' -exec truncate -s 0 {} +
+      - find ansible/output/ssh_keys/ -type f -name 'ssh_key_*' -exec rm -rfv {} +
 
   template:
     requires:
-      vars: [OS_DIST, OS_VERSION, PROXMOX_API_TOKEN_ID, PROXMOX_API_TOKEN_SECRET]
+      vars: [OS_DIST, OS_VERSION, PACKER_API_TOKEN_ID, PACKER_API_TOKEN_SECRET]
     cmds:
-      - |
-        packer build \
-        -var 'proxmox_api_token_id={{.PROXMOX_API_TOKEN_ID}}' \
-        -var 'proxmox_api_token_secret={{.PROXMOX_API_TOKEN_SECRET}}' \
-        -var 'os_dist={{.OS_DIST}}' \
-        -var 'os_version={{.OS_VERSION}}' \
-        packer/
+      - task: ansible:pre-provisioning
+      - task: packer:validate
+      - task: packer:init
+      - task: packer:build
       - defer: { task: cleanup }

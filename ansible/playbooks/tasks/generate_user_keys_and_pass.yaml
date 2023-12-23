@@ -1,13 +1,13 @@
 ---
-- name: Generate SSH Key pair for user "{{ user }}" in "{{ ssh_folder }}"
+- name: Generate SSH Key pair for user
   community.crypto.openssh_keypair:
-    path: "{{ ssh_folder }}/{{ ssh_key_name }}"
+    path: "../output/ssh_keys/ssh_key_{{ config.template.os.dist }}{{ config.template.os.version }}_{{ config.common.ssh.username }}"
     type: ed25519
     comment: initial_ssh_key_generated_by_packer
 
-- name: Slurp contents of public key for user "{{ user }}"
+- name: Slurp contents of public key for user
   ansible.builtin.slurp:
-    src: "{{ ssh_folder }}/{{ ssh_key_name }}.pub"
+    src: "../output/ssh_keys/ssh_key_{{ config.template.os.dist }}{{ config.template.os.version }}_{{ config.common.ssh.username }}.pub"
   register: "user_slurped_pubkey"
 
 - name: Decode slurped user public key and store as fact
@@ -24,5 +24,5 @@
     local_pubkey: "{{ local_slurped_pubkey.content | b64decode | trim }}"
 
 - name: Generate password hash from password
-  ansible.builtin.shell: openssl passwd -6 -salt xyz {{ password }}
+  ansible.builtin.shell: openssl passwd -6 -salt xyz {{ config.common.ssh.password }}
   register: gen_hashed_password

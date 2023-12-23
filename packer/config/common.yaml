@@ -1,29 +1,26 @@
-proxmox:
-  url: "https://pve-rbx.nubiqo.com:8006/api2/json"
-  insecure_skip_tls_verify: false
-  node: "pve-rbx"
-vm:
-  qemu_agent: true
-  cloud_init: false
-  os_type: "l26"
-  machine_type: "q35"
-  bios: "seabios"
-  scsi_controller: "virtio-scsi-pci"
-network:
-  model: "virtio"
-  bridge: "vmbr1"
-  vlan_tag: "1001"
-  firewall: false
-disk:
-  type: "scsi"
-  format: "raw"
-  size: "10G"
-  storage_pool: "zfs-ssd"
-cloud_init:
-  http_directory: "packer/ansible/output/cloud-init"
-  http_port_min: 8100
-  http_port_max: 8100
-ssh:
-  username: "packer"
-  password: "packer"
-  timeout: "20m"
+common:
+  proxmox:
+    url: "https://pve-rbx.nubiqo.com:8006/api2/json"
+    insecure_skip_tls_verify: false
+    node: "pve-rbx"
+  vm:
+    qemu_agent: true
+    cloud_init: false
+    os_type: "l26"
+    machine_type: "q35"
+    bios: "seabios"
+    scsi_controller: "virtio-scsi-pci"
+  network:
+    model: "virtio"
+    bridge: "vmbr1"
+    vlan_tag: "1001"
+    firewall: false
+  disk:
+    type: "scsi"
+    format: "raw"
+    size: "10G"
+    storage_pool: "zfs-ssd"
+  ssh:
+    username: "packer"
+    password: "packer"
+    timeout: "20m"

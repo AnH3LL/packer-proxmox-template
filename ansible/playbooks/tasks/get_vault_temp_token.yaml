@@ -1,0 +1,13 @@
+---
+- name: Vault login and get temporary token
+  ansible.builtin.uri:
+    url: https://vault.nubiqo.cloud/v1/auth/userpass/login/{{ username }}
+    method: POST
+    body_format: form-urlencoded
+    body:
+      password: "{{ password }}"
+  register: response_login
+
+- name: Set temporary token as a fact
+  ansible.builtin.set_fact:
+    temp_token: "{{ response_login.json.auth.client_token }}"

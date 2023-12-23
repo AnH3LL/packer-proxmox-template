@@ -1,0 +1,31 @@
+version: '3'
+
+env:
+  VAULT_USERNAME: nubiadmin
+
+tasks:
+  cleanup:
+    cmds:
+      - find output/cloud-init/ -type f -name '*.cfg' ! -name '99-pve.cfg' -exec rm -rfv {} +
+      - find output/cloud-init/ -type f -name '*-data' -exec rm -rfv {} +
+      - find output/scripts/ -type f -name '*.sh' -exec truncate -s 0 {} +
+      - find output/ssh_keys/ -type f -name 'ssh_key_*' -exec rm -rfv {} +
+
+  populate-vault-secrets:
+    requires:
+      vars: [VAULT_PASSWORD]
+    silent: true
+    cmds:
+      - |
+        ansible-playbook playbooks/populate_vault_secrets.yaml \
+        --extra-vars username={{.VAULT_USERNAME}} \
+        --extra-vars password={{.VAULT_PASSWORD}} \
+
+  pre-provisioning:
+    requires:
+      vars: [OS_DIST, OS_VERSION]
+    cmds:
+      - |
+        ansible-playbook playbooks/pre_provisioning.yaml \
+        --extra-vars os_dist={{.OS_DIST}} \
+        --extra-vars os_version={{.OS_VERSION}} \

@@ -7,7 +7,7 @@
 users:
    - default
 
-# If this is set, 'root' will not be able to ssh in and they 
+# If this is set, 'root' will not be able to ssh in and they
 # will get a message to login instead as the above $user (debian)
 disable_root: true
 
@@ -131,3 +131,9 @@ system_info:
          primary: http://deb.debian.org/debian
          security: http://security.debian.org/
    ssh_svcname: ssh
+
+resize_rootfs: true
+growpart:
+  mode: auto
+  devices: ['/']
+  ignore_growroot_disabled: false

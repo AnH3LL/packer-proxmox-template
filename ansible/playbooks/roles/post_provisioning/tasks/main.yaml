@@ -1,0 +1,12 @@
+---
+- name: Update and install packages
+  ansible.builtin.include_tasks: tasks/update_and_install_packages.yaml
+
+- name: Copy default cloud-init files
+  ansible.builtin.include_tasks: tasks/copy_default_cloud-init_files.yaml
+
+- name: Cleanup packages
+  ansible.builtin.include_tasks: tasks/cleanup_packages.yaml
+
+- name: Cleanup template
+  ansible.builtin.include_tasks: tasks/cleanup_template.yaml
