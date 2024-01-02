@@ -34,3 +34,5 @@ template:
     - ncdu
     - tmux
     - wget
+    - open-iscsi
+    - parted

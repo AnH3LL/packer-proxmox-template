@@ -29,8 +29,8 @@ template:
     - cloud-initramfs-growroot
     - locales-all
     - curl
-    - btop
     - htop
     - ncdu
     - tmux
     - wget
+    - parted
